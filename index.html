@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Activity: Fieldwork Lab | ACC3250 Module 3</title>
+<style>
+:root{
+  --bg:#eef6ff;
+  --ink:#10233f;
+  --muted:#4d5f7a;
+  --blue:#0b5394;
+  --verm:#ff4d2e;
+  --sun:#ffbe0b;
+  --jade:#0fae8c;
+  --cyan:#1fb6ff;
+  --flash:#FFFF02;
+  --good:#0b7d55;
+  --bad:#c92a3c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);background:var(--bg);font-size:16px;line-height:1.55;position:relative;overflow-x:hidden;
+  background-image:repeating-linear-gradient(-45deg,rgba(11,83,148,.045) 0 2px,transparent 2px 14px);
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.3;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:18px 16px 40px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;border-radius:30px;padding:26px 24px 28px;color:#fff;background:var(--blue)}
+.blob{position:absolute;border-radius:50%;filter:blur(28px);opacity:.85;animation:float 9s ease-in-out infinite}
+.b1{width:220px;height:220px;background:var(--verm);left:-60px;top:-70px}
+.b2{width:200px;height:200px;background:var(--sun);right:-40px;top:-60px;animation-delay:-3s}
+.b3{width:240px;height:240px;background:var(--jade);right:20%;bottom:-140px;animation-delay:-6s}
+.b4{width:160px;height:160px;background:var(--cyan);left:30%;top:-90px;animation-delay:-4.5s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,14px) scale(1.12)}}
+.hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.hero>.in{position:relative;z-index:2}
+.uni{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+.crs{font-size:.84rem;opacity:.95;margin-top:2px}
+.tag{display:inline-block;margin-top:16px;padding:6px 14px;border-radius:999px;background:#fff;color:var(--blue);font-weight:900;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+.hero h1{margin:12px 0 6px;font-size:clamp(2rem,5.4vw,3rem);line-height:1;font-weight:900;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--flash)}
+.hero p{margin:0;max-width:560px;font-size:1.02rem}
+
+/* Cycle track */
+.track{margin:18px 0 6px;background:#fff;border-radius:22px;padding:16px 18px 12px;box-shadow:0 14px 30px -22px rgba(16,35,63,.6)}
+.track .cap{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px}
+.rail{position:relative;height:56px;margin:0 18px}
+.line{position:absolute;left:0;right:0;top:20px;height:6px;border-radius:9px;background:#dfe9f6}
+.fill{position:absolute;left:0;top:20px;height:6px;border-radius:9px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--jade));width:0;transition:width .9s cubic-bezier(.6,0,.2,1)}
+.node{position:absolute;top:10px;width:26px;height:26px;margin-left:-13px;border-radius:8px;background:#fff;border:3px solid #c9d8ec;transform:rotate(45deg);transition:all .5s ease}
+.node.lit{background:var(--blue);border-color:var(--blue)}
+.nlab{position:absolute;top:40px;transform:translateX(-50%);font-size:.72rem;font-weight:800;color:var(--muted);white-space:nowrap}
+.token{position:absolute;top:6px;width:34px;height:34px;margin-left:-17px;border-radius:50%;background:var(--flash);border:3px solid var(--ink);display:grid;place-items:center;transition:left .9s cubic-bezier(.6,0,.2,1);z-index:2;animation:pulse 1.8s ease-in-out infinite}
+.token svg{width:16px;height:16px;color:var(--ink)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,2,.8)}50%{box-shadow:0 0 0 9px rgba(255,255,2,0)}}
+
+/* Stage chips */
+.stages{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.sc{display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 6px;border-radius:999px;background:#fff;font-weight:800;font-size:.8rem;color:var(--muted);border:2px solid transparent;transition:all .3s ease}
+.sc i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#e4edf8;color:var(--muted);font-style:normal}
+.sc i svg{width:14px;height:14px}
+.sc.on{border-color:var(--c);color:var(--ink)}
+.sc.on i{background:var(--c);color:var(--on)}
+.sc.fin{background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--ink)}
+.sc.fin i{background:var(--c);color:var(--on)}
+
+/* Card */
+.card{margin-top:16px;display:grid;grid-template-columns:86px 1fr;background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 22px 44px -26px rgba(16,35,63,.55);animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.side{background:var(--c);color:var(--on);display:flex;flex-direction:column;align-items:center;padding:18px 8px;gap:12px;position:relative;overflow:hidden}
+.side::after{content:"";position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")}
+.side .big{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.22);display:grid;place-items:center;position:relative;z-index:1}
+.side .big svg{width:30px;height:30px}
+.side .num{font-weight:900;font-size:.78rem;letter-spacing:.05em;writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;position:relative;z-index:1}
+.main{padding:22px 22px 20px;min-width:0}
+.kick{font-size:.74rem;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:var(--blue)}
+h2{margin:4px 0 10px;font-size:clamp(1.3rem,3.5vw,1.75rem);line-height:1.15;font-weight:900}
+h2:focus{outline:none}
+.q{font-weight:700;font-size:1.07rem;margin:0 0 16px}
+.lead{margin:0 0 14px;font-size:1.03rem}
+.mini{display:flex;gap:5px;margin:2px 0 12px;flex-wrap:wrap}
+.mini b{width:22px;height:6px;border-radius:9px;background:#e1e9f5;display:block;transition:background .4s ease}
+.mini b.ok{background:var(--good)}
+.mini b.no{background:var(--bad)}
+.mini b.cur{background:var(--c)}
+
+/* Options */
+.opts{display:grid;gap:10px}
+.opts.tiles{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.opt{font:inherit;color:var(--ink);text-align:left;cursor:pointer;width:100%;display:flex;gap:12px;align-items:center;padding:11px 14px;border-radius:16px;background:#f5f9ff;border:2px solid #d9e5f4;
+  opacity:0;animation:pop .45s cubic-bezier(.2,.9,.3,1.2) forwards;transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.opt:nth-child(1){animation-delay:.05s}.opt:nth-child(2){animation-delay:.11s}.opt:nth-child(3){animation-delay:.17s}.opt:nth-child(4){animation-delay:.23s}.opt:nth-child(5){animation-delay:.29s}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.opt:hover:not(:disabled){transform:translateX(4px);border-color:var(--c);background:color-mix(in srgb,var(--c) 8%,#fff)}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.opt:disabled{cursor:default}
+.hex{flex:none;width:32px;height:30px;display:grid;place-items:center;font-weight:900;font-size:.82rem;color:#fff;background:var(--c);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+.ot{flex:1}
+.lbl{display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:.7rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:2px 8px;border-radius:6px;vertical-align:middle}
+.lbl svg{width:12px;height:12px}
+.opt.right{border-color:var(--good);background:#e7f7f0;animation:none;opacity:1}
+.opt.right .hex{background:var(--good)}
+.opt.right .lbl{background:var(--good)}
+.opt.wrong{border-color:var(--bad);background:#fdecef;animation:none;opacity:1}
+.opt.wrong .hex{background:var(--bad)}
+.opt.wrong .lbl{background:var(--bad)}
+.opt.dim{opacity:.5;animation:none}
+.opt.jolt{animation:shake .45s ease}
+.opt.boom{animation:boom .45s ease}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes boom{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+
+/* Feedback */
+.fb{margin-top:16px;padding:14px 16px;border-radius:16px;display:flex;gap:12px;align-items:flex-start;animation:drop .4s ease both}
+@keyframes drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.fb.ok{background:#e4f6ee;border:2px solid var(--good)}
+.fb.no{background:#fdebee;border:2px solid var(--bad)}
+.fb .fi{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.fb.ok .fi{background:var(--good)}
+.fb.no .fi{background:var(--bad)}
+.fb .fi svg{width:18px;height:18px}
+.fb strong{display:block}
+.fb p{margin:2px 0 0}
+
+/* Gauge */
+.gauge{margin:0 0 16px;padding:14px;border-radius:16px;background:#fff8e1;border:2px dashed #f0c64a}
+.gauge .gt{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.85rem;font-weight:800}
+.gbar{position:relative;height:22px;border-radius:12px;background:#f1e6c4;margin:30px 0 6px;overflow:visible}
+.gfill{position:absolute;left:0;top:0;bottom:0;border-radius:12px;background:linear-gradient(90deg,var(--sun),var(--verm));width:0;transition:width 1.2s cubic-bezier(.6,0,.2,1)}
+.gmark{position:absolute;top:-6px;bottom:-6px;width:3px;background:var(--ink);border-radius:2px}
+.gmark span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:.7rem;font-weight:900;white-space:nowrap}
+.gnote{font-size:.82rem;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0 0 14px}
+.facts div{background:#f5f9ff;border-radius:12px;padding:8px 10px;border:2px solid #d9e5f4}
+.facts small{display:block;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.facts b{font-size:1.02rem}
+
+/* Buttons */
+.act{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:900;cursor:pointer;border:0;border-radius:999px;padding:12px 22px;background:var(--ink);color:#fff;display:inline-flex;align-items:center;gap:10px;transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-2px);background:var(--blue)}
+.btn .ar{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--flash);color:var(--ink)}
+.btn .ar svg{width:14px;height:14px}
+.btn.lite{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.btn.lite:hover{background:#fff}
+.btn>svg{width:18px;height:18px;flex:none}
+
+/* Intro and results */
+.mods{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:14px}
+.mod{border-radius:18px;padding:14px;background:color-mix(in srgb,var(--c) 12%,#fff);position:relative;overflow:hidden;animation:pop .5s ease both}
+.mod:nth-child(2){animation-delay:.08s}.mod:nth-child(3){animation-delay:.16s}.mod:nth-child(4){animation-delay:.24s}
+.mod .mi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--c);color:var(--on);margin-bottom:8px}
+.mod .mi svg{width:22px;height:22px}
+.mod b{display:block;line-height:1.2}
+.mod small{color:var(--muted);font-weight:700}
+.pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pillrow span{padding:5px 12px;border-radius:999px;background:#e4edf8;color:var(--blue);font-weight:800;font-size:.82rem}
+.center{text-align:center}
+.score{font-size:2.6rem;font-weight:900;line-height:1;margin:6px 0}
+.res{display:grid;gap:10px;margin-top:16px}
+.ri{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:color-mix(in srgb,var(--c) 10%,#fff);animation:rise .5s ease both}
+.ri:nth-child(2){animation-delay:.1s}.ri:nth-child(3){animation-delay:.2s}.ri:nth-child(4){animation-delay:.3s}
+.ri .mi{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--c);color:var(--on)}
+.ri .mi svg{width:22px;height:22px}
+.ri .nm{flex:1;font-weight:800;line-height:1.25}
+.ri .nm small{display:block;font-weight:600;color:var(--muted)}
+.ri .pt{font-weight:900;white-space:nowrap}
+.bar2{height:8px;border-radius:9px;background:#fff;margin-top:6px;overflow:hidden}
+.bar2 span{display:block;height:100%;background:var(--c);border-radius:9px;width:0;transition:width 1s ease .3s}
+.next{margin-top:16px;padding:14px 16px;border-radius:16px;background:var(--blue);color:#fff}
+.next p{margin:0}
+.next b{color:var(--flash)}
+
+/* Confetti */
+.conf{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.conf i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall var(--d) linear forwards}
+@keyframes fall{to{transform:translate(var(--x),110vh) rotate(var(--r));opacity:.2}}
+footer{text-align:center;color:var(--muted);font-size:.8rem;margin-top:24px}
+
+@media (max-width:560px){
+  .card{grid-template-columns:1fr}
+  .side{flex-direction:row;justify-content:flex-start;padding:10px 14px}
+  .side .big{width:40px;height:40px;border-radius:12px}
+  .side .big svg{width:22px;height:22px}
+  .side .num{writing-mode:horizontal-tb;transform:none}
+  .main{padding:18px 16px}
+  .nlab{font-size:.62rem}
+  .rail{margin:0 12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .opt{opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="blob b1" aria-hidden="true"></span><span class="blob b2" aria-hidden="true"></span><span class="blob b3" aria-hidden="true"></span><span class="blob b4" aria-hidden="true"></span>
+    <div class="in">
+      <div class="uni">Nexford University</div>
+      <div class="crs">ACC3250 Auditing and Assurance Services &middot; Module 3</div>
+      <span class="tag">Practice Activity</span>
+      <h1>Fieldwork <em>Lab</em></h1>
+      <p>Follow Pellmore's sales from order to cash, test what the controls really do, and reach the assertion with the right evidence.</p>
+    </div>
+  </header>
+
+  <section class="track" aria-label="Revenue cycle progress">
+    <div class="cap"><span>Revenue cycle walkthrough</span><span id="pct">0% complete</span></div>
+    <div class="rail" id="railbox"></div>
+    <div class="stages" id="chips"></div>
+  </section>
+
+  <main id="app"></main>
+  <div id="live" class="sr" aria-live="polite"></div>
+  <footer>Nexford University &middot; ACC3250 Module 3 Practice Activity</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var IC = {
+    steps:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><ellipse cx="7.5" cy="8" rx="2.6" ry="4"/><ellipse cx="16.5" cy="13" rx="2.6" ry="4"/><circle cx="6.2" cy="14.3" r="1.4"/><circle cx="15.2" cy="19.3" r="1.4"/></svg>',
+    gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8l1.6 2.3 2.7-.6.6 2.7 2.3 1.6-1.3 2.4 1.3 2.4-2.3 1.6-.6 2.7-2.7-.6L12 21.2l-1.6-2.3-2.7.6-.6-2.7-2.3-1.6 1.3-2.4-1.3-2.4 2.3-1.6.6-2.7 2.7.6z"/><path d="M12 8.5v4"/><circle cx="12" cy="15.3" r=".9" fill="currentColor"/></svg>',
+    flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21.5h11.6a2 2 0 0 0 1.7-3L14 9V3"/><path d="M7 15h10"/><circle cx="10" cy="18" r=".8" fill="currentColor"/><circle cx="13.5" cy="17.2" r=".8" fill="currentColor"/></svg>',
+    cross:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4"/></svg>',
+    box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l8-4 8 4-8 4z"/><path d="M4 8v8l8 4 8-4V8"/><path d="M12 12v8"/></svg>',
+    yes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    no:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    go:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    redo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v5h5"/></svg>'
+  };
+
+  var COMP = ["Control environment","Risk assessment","Information system and communication","Control activities","Monitoring"];
+  var DEF = ["Design deficiency","Operating deficiency","No deficiency"];
+  var SAMP = ["Attribute sampling","Monetary unit sampling (MUS)","Classical variables sampling"];
+  var DIR = ["It goes up","It goes down","It stays about the same"];
+  var ASR = ["Occurrence","Completeness","Cutoff","Valuation"];
+
+  var ST = [
+    {
+      name:"Walk the Cycle", short:"Walk", c:"#0b5394", on:"#ffffff", icon:"steps",
+      intro:"Wiley LLP's first-year audit of Pellmore Juice Company has reached fieldwork. Before testing anything, you walk a few sales from customer order to cash in the bank. Place what you see in the internal control picture.",
+      review:"Section 2: Internal Control and the Revenue Cycle",
+      items:[
+        {q:"Pellmore's audit committee questions management's figures at every meeting, and managers who break the code of conduct face real consequences. Which component of internal control is this?", o:COMP, a:0, tiles:true,
+         e:"This is the control environment: tone at the top, integrity, and board and audit committee oversight. The auditor gets evidence of it through inquiry at several levels and board minutes, not by picking 25 items."},
+        {q:"Every quarter, Pellmore's internal audit team checks whether the daily receipts reconciliation is still being done, and reports any failures for fixing. Which component is this?", o:COMP, a:4, tiles:true,
+         e:"This is monitoring: how the organization checks that its controls still work and fixes the ones that don't, often through internal audit."},
+        {q:"A finance clerk reconciles daily receipts to the bank, and a manager reviews and signs the reconciliation. Which component is this?", o:COMP, a:3, tiles:true,
+         e:"Approvals, reconciliations, and segregation of duties are control activities, the component most open to testing: select items and inspect or reperform."},
+        {q:"Every Pellmore dispatch note is prenumbered, and the billing team checks that each number in the sequence has an invoice. Which assertion does this control mainly protect?",
+         o:["Completeness of revenue","Valuation of receivables","Rights and obligations over inventory","Classification of expenses"], a:0,
+         e:"A prenumbered, sequence-checked document makes completeness testable. A missing number is a question someone has to answer, and it is one of the few controls that helps find what was never recorded."},
+        {q:"Why does Wiley perform a walkthrough before it tests any controls?",
+         o:["To confirm it understands the process and to see where the controls really sit","To test a statistical sample of sales","To replace tests of operating effectiveness","To check the arithmetic on each invoice"], a:0,
+         e:"A walkthrough follows one or a few transactions through the whole cycle. It isn't a sample: it confirms understanding and shows where a written process and actual practice part ways."},
+        {q:"Pellmore's system automatically blocks any order above the customer's credit limit, and it worked for every order Wiley traced. What must Wiley also test before relying on it for the whole year?",
+         o:["The general IT controls, such as access and program change controls","Only a larger sample of orders","Management's written confirmation that the check works","Nothing more, because automated controls never change"], a:0,
+         e:"An application control does the same thing every time only if the general IT controls around it work. Without them, the rule tested in March may not be the rule that ran in November."}
+      ]
+    },
+    {
+      name:"Diagnose the Controls", short:"Diagnose", c:"#ff4d2e", on:"#ffffff", icon:"gear",
+      intro:"Your team's control tests are back. For each result, decide what kind of failure it is, then judge how serious it is and who must hear about it.",
+      review:"Section 2: When a control fails, deficiencies and who must be told",
+      items:[
+        {q:"Pellmore's policy requires a second person to approve customer refunds over $2,000. There is no approval step at all for smaller refunds, which make up most refunds by value.", o:DEF, a:0, tiles:true,
+         e:"A needed control is missing for most of the population. Performed exactly as written, the policy still wouldn't cover the risk, so this is a design deficiency."},
+        {q:"The credit controller is meant to review the daily report of orders over credit limits. On 5 of the 25 days tested, the report shows no sign of review.", o:DEF, a:1, tiles:true,
+         e:"The control is designed well but wasn't performed as designed on those days. That is an operating deficiency."},
+        {q:"The same billing clerk can create new customers in the system and also post the payments they make.", o:DEF, a:0, tiles:true,
+         e:"No one person should authorize, record, and handle the same transaction. The setup itself lacks segregation of duties, so this is a design deficiency."},
+        {q:"The monthly receivables reconciliation was done every month, but by a trainee who cleared reconciling items without understanding or investigating them.", o:DEF, a:1, tiles:true,
+         e:"A control performed by someone without the competence to do it is an operating deficiency: the design is sound, but it didn't operate as intended."},
+        {q:"Which of these does ISA 265 point to when judging whether a deficiency is significant?",
+         o:["How susceptible the asset or balance is to loss or fraud","Whether a misstatement has already been found","Whether management agrees with the finding","How long the working papers are"], a:0,
+         e:"Severity turns on what could happen, not on whether a misstatement has already occurred. Other factors include the likely size of misstatements, subjectivity, the volume exposed, and the cause and frequency of exceptions."},
+        {q:"Two deficiencies sit in Pellmore's revenue cycle: unreviewed credit-limit overrides and an unchecked dispatch sequence. Neither is significant on its own. What should Wiley consider?",
+         o:["Whether together they add up to a significant deficiency","Nothing more, because each one alone is minor","Only the larger of the two","Whether management can fix them before year end"], a:0,
+         e:"Deficiencies interact. Several minor deficiencies in one cycle can add up to a significant one."},
+        {q:"Wiley concludes the refund approval gap is a significant deficiency. How must it be communicated?",
+         o:["In writing, on a timely basis, to those charged with governance, describing it and its potential effects","Orally to the billing clerk","Only in the auditor's report","In writing to management only, at the next year's audit"], a:0,
+         e:"Significant deficiencies go in writing to those charged with governance on a timely basis, stating that the audit's purpose was an opinion on the financial statements, not on internal control."}
+      ]
+    },
+    {
+      name:"Sample Lab", short:"Sample", c:"#ffbe0b", on:"#10233f", icon:"flask",
+      intro:"Now size, select, and project. Wiley tests Pellmore's controls and its receivables balance, and every result has to say something about the whole population, not just the items picked.",
+      review:"Section 3: Testing Controls and Sampling",
+      items:[
+        {q:"Wiley wants to know how often Pellmore's credit approval control failed. Which sampling method fits?", o:SAMP, a:0, tiles:true,
+         e:"Tests of controls use attribute sampling, which measures the rate of deviation: a yes-or-no result for each item."},
+        {q:"Wiley tests receivables for overstatement and wants larger balances to have a greater chance of selection. Which method fits?", o:SAMP, a:1, tiles:true,
+         e:"In monetary unit sampling, every currency unit has an equal chance of selection, so larger items are more likely to be picked."},
+        {q:"Wiley lowers the tolerable rate of deviation for the credit control from 8% to 5%. What happens to the sample size?", o:DIR, a:0, tiles:true,
+         e:"Accepting less error needs more precision, so the sample size goes up. A higher tolerable rate would bring it down."},
+        {q:"Pellmore's receivables population doubles from 8,000 to 16,000 balances. What happens to the sample size?", o:DIR, a:2, tiles:true,
+         e:"Once a population is large, its size barely changes the sample. Size is driven by risk and precision, so a rule like “test 5%” has no basis."},
+        {q:"A senior picks receivables that were easy to find in the files, and the working paper says “random selection.” What is the problem?",
+         o:["The items were chosen haphazardly, with possible bias, and the file misdescribes the method","Nothing, as long as enough items were tested","Random selection is never allowed in auditing","The sample should have been a single block of consecutive items"], a:0,
+         e:"Regulators found exactly this: files said “random” when items were chosen haphazardly with no reason recorded. Selection must be expected to represent the population, and the file must describe it truthfully."},
+        {proj:true, q:"Using the ratio method, what is the projected misstatement for the whole receivables population?",
+         o:["$3,000","$12,000","$60,000","$600,000"], a:2, tiles:true,
+         e:"$3,000 ÷ $250,000 = 1.2% of the sample's book value. Projected: 1.2% × $5,000,000 = $60,000. Misstatements in a sample are a finding about the whole population."},
+        {proj:true, gauge:true, q:"Tolerable misstatement for this test is $70,000. The projection is $60,000. What should Wiley conclude?",
+         o:["The projection is close to the limit, leaving little room for sampling risk, so Wiley should do more testing","The balance passes, because $60,000 is below $70,000","The balance fails, because any misstatement is too much","Wiley should drop the largest error and project again"], a:0,
+         e:"Project first, then compare with tolerable misstatement. A projection close to the limit is a reason to do more, such as extending the sample, not a pass."},
+        {q:"One misstatement in the sample turns out to be an invoice altered after it was approved. What changes?",
+         o:["It stops being a sampling question: it is a fraud indicator and needs a fraud response","Nothing, as it is already included in the projection","Wiley treats it as an anomaly and leaves it out","Wiley doubles the sample size"], a:0,
+         e:"Investigate the nature and cause of every misstatement before projecting. An error that looks deliberate is a fraud indicator, and the response is a fraud response, not a bigger sample."}
+      ]
+    },
+    {
+      name:"Reach the Assertion", short:"Reach", c:"#0fae8c", on:"#ffffff", icon:"cross",
+      intro:"Whatever the controls showed, substantive work is still required. Choose procedures that reach the assertion where the risk sits.",
+      review:"Section 4: Substantive Testing",
+      items:[
+        {q:"Pellmore's controls over sales tested well. Can Wiley skip substantive procedures on revenue?",
+         o:["No, because substantive procedures are required for every material class of transactions and balance","Yes, because effective controls replace substantive work","Yes, if management signs a written confirmation","No, but only because revenue is always a fraud risk"], a:0,
+         e:"Good controls reduce how much substantive work is needed. They never reduce it to nothing (ISA 330)."},
+        {q:"Wiley vouches recorded December sales back to signed delivery notes and to cash received after year end. Which assertion does this test?", o:ASR, a:0, tiles:true,
+         e:"Vouching starts from a recorded entry and works back to evidence, so it tests occurrence (and existence for balances)."},
+        {q:"Why can't vouching from the sales ledger find a sale that Pellmore never recorded?",
+         o:["Vouching only looks at what was recorded, so completeness needs tracing from source documents into the records","Because the ledger is always complete","Because vouching tests valuation only","Because unrecorded sales are below materiality"], a:0,
+         e:"Completeness is invisible from inside the ledger. An auditor who only vouches never finds an unrecorded transaction."},
+        {q:"At Pellmore's count, Wiley picks items from the count records and finds them on the floor, then picks items on the floor and finds them in the records. What does each direction test?",
+         o:["Records to floor tests existence; floor to records tests completeness","Records to floor tests completeness; floor to records tests existence","Both directions test valuation","Both directions test cutoff"], a:0,
+         e:"Test counts in both directions answer different questions: records to floor for existence, floor to records for completeness (ISA 501)."},
+        {q:"The count went well and test counts agreed. Which question does attending the count leave open?",
+         o:["Whether inventory is stated at the lower of cost and net realizable value","Whether the inventory exists","Whether the count procedures were followed","Whether the stock was in usable condition"], a:0,
+         e:"Count attendance gives evidence of existence and condition. It doesn't prove cost or net realizable value."},
+        {q:"Pellmore's finance team offers to mail the customer confirmation requests to save Wiley time. What should Wiley do?",
+         o:["Keep control: Wiley selects the items, sends the requests, and receives the replies directly","Accept, as long as the replies come back to Wiley","Accept, because customers will reply honestly either way","Switch to negative confirmations instead"], a:0,
+         e:"Under ISA 505, the auditor controls the confirmation process from selecting the items to receiving the replies."},
+        {q:"A customer doesn't reply to a positive confirmation request. What comes next?",
+         o:["Perform alternative procedures, such as testing cash received after year end","Treat the balance as confirmed","Ask Pellmore's sales team to confirm the balance instead","Remove the customer from the sample"], a:0,
+         e:"Non-replies need alternative procedures. Cash received after year end is strong evidence that the balance existed."},
+        {q:"What makes an analytical procedure precise enough to count as substantive evidence?",
+         o:["An expectation built from tested or external data, a difference threshold set in advance, and differences investigated with evidence","A comparison with last year's figure","Management's explanation of any change","A larger number of accounts reviewed"], a:0,
+         e:"Under ISA 520, the auditor develops an independent expectation, sets the acceptable difference in advance, and investigates larger differences with evidence, not just management's explanation."},
+        {q:"Pellmore's allowance for doubtful receivables is an accounting estimate. What does ISA 540 (Revised) point the auditor to?",
+         o:["Test the method, assumptions, and data, and compare last year's estimate with what actually happened","Accept management's figure if it is close to last year's","Recalculate the allowance's arithmetic only","Confirm the allowance with customers"], a:0,
+         e:"An estimate is tested through its method, assumptions, and data. Looking back at last year's estimate also helps reveal management bias."}
+      ]
+    }
+  ];
+
+  var TOTAL = ST.reduce(function(n, s){ return n + s.items.length; }, 0);
+  var CYCLE = ["Order","Credit","Dispatch","Billing","Cash"];
+  var app = document.getElementById("app"), live = document.getElementById("live");
+  var railbox = document.getElementById("railbox"), chips = document.getElementById("chips"), pct = document.getElementById("pct");
+  var S;
+
+  function shuffle(n){ var a=[]; for (var x=0;x<n;x++) a.push(x); for (var y=n-1;y>0;y--){ var j=Math.floor(Math.random()*(y+1)); var t=a[y]; a[y]=a[j]; a[j]=t; } return a; }
+  function reset(){
+    S = {view:"intro", s:0, i:0,
+      r:ST.map(function(st){ return st.items.map(function(){ return null; }); }),
+      ord:ST.map(function(st){ return st.items.map(function(it){ return it.tiles ? it.o.map(function(_,k){ return k; }) : shuffle(it.o.length); }); })};
+  }
+  function answered(){ var n=0; S.r.forEach(function(a){ a.forEach(function(x){ if (x) n++; }); }); return n; }
+  function score(si){ return S.r[si].filter(function(x){ return x && x.ok; }).length; }
+  function done(si){ return S.r[si].every(function(x){ return x !== null; }); }
+  function v(st){ return "--c:"+st.c+";--on:"+st.on; }
+  function letter(n){ return String.fromCharCode(65+n); }
+
+  function buildRail(){
+    var html = '<div class="line"></div><div class="fill" id="fill"></div>';
+    CYCLE.forEach(function(name, k){
+      var left = (k/(CYCLE.length-1))*100;
+      html += '<span class="node" data-p="'+left+'" style="left:'+left+'%"></span><span class="nlab" style="left:'+left+'%">'+name+'</span>';
+    });
+    html += '<span class="token" id="token" style="left:0%">'+IC.box+'</span>';
+    railbox.innerHTML = html;
+  }
+
+  function updateRail(){
+    var p = Math.round(answered()/TOTAL*100);
+    document.getElementById("fill").style.width = p+"%";
+    document.getElementById("token").style.left = p+"%";
+    Array.prototype.forEach.call(railbox.querySelectorAll(".node"), function(n){
+      n.classList.toggle("lit", parseFloat(n.getAttribute("data-p")) <= p && p > 0);
+    });
+    pct.textContent = p+"% complete";
+    chips.innerHTML = ST.map(function(st, si){
+      var cls = "sc", state = "not started";
+      if (done(si)){ cls += " fin"; state = "complete"; }
+      else if ((S.view === "item" || S.view === "stage" || S.view === "stageEnd") && si === S.s){ cls += " on"; state = "in progress"; }
+      return '<span class="'+cls+'" style="'+v(st)+'"><i>'+(done(si) ? IC.yes : IC[st.icon])+'</i>'+st.short+'<span class="sr">, '+state+'</span></span>';
+    }).join("");
+  }
+
+  function card(st, sideLabel, inner){
+    return '<section class="card" style="'+v(st)+'"><div class="side"><span class="big">'+IC[st.icon]+'</span><span class="num">'+sideLabel+'</span></div><div class="main">'+inner+'</div></section>';
+  }
+
+  function focusH(){ var h = app.querySelector("h2"); if (h){ h.setAttribute("tabindex","-1"); h.focus(); } }
+
+  function intro(){
+    var mods = ST.map(function(st, si){
+      return '<div class="mod" style="'+v(st)+'"><span class="mi">'+IC[st.icon]+'</span><b>'+(si+1)+'. '+st.name+'</b><small>'+st.items.length+' tasks</small></div>';
+    }).join("");
+    app.innerHTML = card({c:"#0b5394", on:"#ffffff", icon:"box"}, "Briefing",
+      '<span class="kick">Wiley LLP &middot; Pellmore Juice Company</span><h2>Fieldwork starts today</h2>'+
+      '<p class="lead">Wiley planned to rely on some of Pellmore\'s revenue controls, and that reliance shapes how much testing the audit needs. Your job this week: understand where the controls sit, diagnose the control test results, size and project samples, and choose substantive procedures that reach the assertion at risk.</p>'+
+      '<p class="lead">The box on the track above is a sale moving from order to cash. It advances as you work. Each task allows one attempt: your answer is recorded, you see why the best answer is right, and you move on.</p>'+
+      '<div class="mods">'+mods+'</div>'+
+      '<div class="pillrow"><span>About 25 minutes</span><span>'+TOTAL+' tasks</span><span>One attempt each</span></div>'+
+      '<div class="act"><button class="btn" id="start" type="button">Start fieldwork <span class="ar">'+IC.go+'</span></button></div>');
+    document.getElementById("start").addEventListener("click", function(){ S.view = "stage"; S.s = 0; render(true); });
+  }
+
+  function stage(){
+    var st = ST[S.s];
+    app.innerHTML = card(st, "Station "+(S.s+1),
+      '<span class="kick">Station '+(S.s+1)+' of '+ST.length+' &middot; '+st.items.length+' tasks</span><h2>'+st.name+'</h2><p class="lead">'+st.intro+'</p>'+
+      '<div class="act"><button class="btn" id="go" type="button">Begin station '+(S.s+1)+' <span class="ar">'+IC.go+'</span></button></div>');
+    document.getElementById("go").addEventListener("click", function(){ S.view = "item"; S.i = 0; render(true); });
+  }
+
+  function projFacts(){
+    return '<div class="facts"><div><small>Receivables book value</small><b>$5,000,000</b></div><div><small>Sample book value</small><b>$250,000</b></div><div><small>Misstatements found</small><b>$3,000</b></div></div>';
+  }
+
+  function gauge(res){
+    var tol = 70000, proj = 60000, max = 90000;
+    return '<div class="gauge"><div class="gt"><span>Projected misstatement vs tolerable misstatement</span><span>$60,000 of $70,000</span></div>'+
+      '<div class="gbar"><span class="gfill" id="gfill" data-w="'+(proj/max*100).toFixed(1)+'"></span><span class="gmark" style="left:'+(tol/max*100).toFixed(1)+'%"><span>Tolerable</span></span></div>'+
+      '<div class="gnote">Only $10,000 of room is left for misstatements the sample didn\'t catch.</div></div>';
+  }
+
+  function item(fresh){
+    var st = ST[S.s], it = st.items[S.i], res = S.r[S.s][S.i];
+    var mini = '<div class="mini" aria-hidden="true">'+st.items.map(function(_, k){
+      var x = S.r[S.s][k]; return '<b class="'+(x ? (x.ok ? "ok" : "no") : (k === S.i ? "cur" : ""))+'"></b>';
+    }).join("")+'</div>';
+    var opts = '<div class="opts'+(it.tiles ? " tiles" : "")+'" role="group" aria-label="Answer options">'+S.ord[S.s][S.i].map(function(k, pos){
+      var cls = "opt", lab = "";
+      if (res){
+        if (k === it.a){ cls += " right"; lab = '<span class="lbl">'+IC.yes+(res.pick === k ? "Your answer" : "Best answer")+'</span>'; if (fresh && res.pick === k) cls += " boom"; }
+        else if (k === res.pick){ cls += " wrong"; lab = '<span class="lbl">'+IC.no+'Your answer</span>'; if (fresh) cls += " jolt"; }
+        else cls += " dim";
+      }
+      return '<button type="button" class="'+cls+'" data-k="'+k+'"'+(res ? " disabled" : "")+'><span class="hex" aria-hidden="true">'+letter(pos)+'</span><span class="ot">'+it.o[k]+lab+'</span></button>';
+    }).join("")+'</div>';
+    var fb = "";
+    if (res){
+      var last = S.i === st.items.length - 1;
+      fb = '<div class="fb '+(res.ok ? "ok" : "no")+'"><span class="fi">'+(res.ok ? IC.yes : IC.no)+'</span><div><strong>'+(res.ok ? "Correct" : "Not quite. Recorded as incorrect.")+'</strong><p>'+it.e+'</p></div></div>'+
+        '<div class="act"><button class="btn" id="next" type="button">'+(last ? "Close station" : "Next task")+' <span class="ar">'+IC.go+'</span></button></div>';
+    }
+    app.innerHTML = card(st, "Task "+(S.i+1)+" of "+st.items.length,
+      '<span class="kick">'+st.name+' &middot; Task '+(S.i+1)+' of '+st.items.length+'</span><h2 class="sr">Task '+(S.i+1)+'</h2>'+mini+
+      (it.proj ? projFacts() : '')+(it.gauge ? gauge() : '')+
+      '<p class="q">'+it.q+'</p>'+opts+fb);
+    var gf = document.getElementById("gfill");
+    if (gf){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ gf.style.width = gf.getAttribute("data-w")+"%"; }); }); }
+    if (!res){
+      Array.prototype.forEach.call(app.querySelectorAll(".opt"), function(b){
+        b.addEventListener("click", function(){ pick(parseInt(b.getAttribute("data-k"),10)); });
+      });
+    } else {
+      document.getElementById("next").addEventListener("click", function(){
+        if (S.i < st.items.length - 1){ S.i++; } else { S.view = "stageEnd"; }
+        render(true);
+      });
+    }
+  }
+
+  function pick(k){
+    var it = ST[S.s].items[S.i];
+    if (S.r[S.s][S.i]) return;
+    var ok = k === it.a;
+    S.r[S.s][S.i] = {pick:k, ok:ok};
+    updateRail();
+    item(true);
+    live.textContent = (ok ? "Correct. " : "Not quite. Recorded as incorrect. ") + it.e;
+    var n = document.getElementById("next"); if (n) n.focus();
+  }
+
+  function confetti(){
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var box = document.createElement("div"); box.className = "conf"; box.setAttribute("aria-hidden","true");
+    var cols = ["#0b5394","#ff4d2e","#ffbe0b","#0fae8c","#1fb6ff","#FFFF02"];
+    for (var k = 0; k < 46; k++){
+      var p = document.createElement("i");
+      p.style.left = (Math.random()*100)+"%";
+      p.style.background = cols[k % cols.length];
+      p.style.setProperty("--x", (Math.random()*160-80).toFixed(0)+"px");
+      p.style.setProperty("--r", (Math.random()*720-360).toFixed(0)+"deg");
+      p.style.setProperty("--d", (1.6+Math.random()*1.4).toFixed(2)+"s");
+      p.style.animationDelay = (Math.random()*0.4).toFixed(2)+"s";
+      box.appendChild(p);
+    }
+    document.body.appendChild(box);
+    setTimeout(function(){ if (box.parentNode) box.parentNode.removeChild(box); }, 3600);
+  }
+
+  function countUp(el, to){
+    if (!el) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){ el.textContent = to; return; }
+    var n = 0, step = Math.max(1, Math.round(to/20));
+    var t = setInterval(function(){ n = Math.min(to, n + step); el.textContent = n; if (n >= to) clearInterval(t); }, 40);
+  }
+
+  function stageEnd(){
+    var st = ST[S.s], sc = score(S.s), tot = st.items.length, last = S.s === ST.length - 1;
+    app.innerHTML = card(st, "Station "+(S.s+1)+" closed",
+      '<div class="center"><span class="kick">Station complete</span><h2>'+st.name+'</h2><p class="score"><span id="cu">0</span> / '+tot+'</p>'+
+      '<p class="lead">'+(sc === tot ? "Every task at this station was correct." : "Your missed tasks are recorded. You can review this topic in " + st.review + ".")+'</p>'+
+      '<div class="act" style="justify-content:center"><button class="btn" id="cont" type="button">'+(last ? "See your fieldwork results" : "Go to station "+(S.s+2))+' <span class="ar">'+IC.go+'</span></button></div></div>');
+    countUp(document.getElementById("cu"), sc);
+    confetti();
+    live.textContent = "Station " + (S.s+1) + " complete. " + sc + " of " + tot + " correct.";
+    document.getElementById("cont").addEventListener("click", function(){
+      if (last){ S.view = "end"; } else { S.s++; S.i = 0; S.view = "stage"; }
+      render(true);
+    });
+  }
+
+  function end(){
+    var t = 0;
+    var rows = ST.map(function(st, si){
+      var sc = score(si), n = st.items.length; t += sc;
+      return '<div class="ri" style="'+v(st)+'"><span class="mi">'+IC[st.icon]+'</span><span class="nm">'+(si+1)+'. '+st.name+
+        '<small>'+(sc === n ? "All correct" : "Review: " + st.review)+'</small><span class="bar2"><span data-w="'+(sc/n*100).toFixed(0)+'"></span></span></span><span class="pt">'+sc+' / '+n+'</span></div>';
+    }).join("");
+    app.innerHTML = card({c:"#0b5394", on:"#ffffff", icon:"box"}, "Results",
+      '<div class="center"><span class="kick">Fieldwork complete</span><h2>The sale reached the bank</h2><p class="score"><span id="cu">0</span> / '+TOTAL+'</p></div>'+
+      '<div class="res">'+rows+'</div>'+
+      '<div class="next"><p><b>Up next: Assignment 3.</b> You will build the Testing Program for Kiboko Solar Distributors: evaluate six control results and classify each deficiency, project a receivables sample to the population, and design substantive procedures for installment receivables and inventory.</p></div>'+
+      '<div class="act"><button class="btn lite" id="again" type="button">'+IC.redo+' Start again</button></div>');
+    countUp(document.getElementById("cu"), t);
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      Array.prototype.forEach.call(app.querySelectorAll(".bar2 span"), function(s){ s.style.width = s.getAttribute("data-w")+"%"; });
+    }); });
+    confetti();
+    live.textContent = "Activity complete. " + t + " of " + TOTAL + " correct.";
+    document.getElementById("again").addEventListener("click", function(){ reset(); render(true); });
+  }
+
+  function render(move){
+    updateRail();
+    if (S.view === "intro") intro();
+    else if (S.view === "stage") stage();
+    else if (S.view === "item") item(false);
+    else if (S.view === "stageEnd") stageEnd();
+    else end();
+    if (move){
+      focusH();
+      var tr = document.querySelector(".track");
+      if (S.view !== "intro" && tr && tr.scrollIntoView) tr.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+
+  reset();
+  buildRail();
+  render(false);
+})();
+</script>
+</body>
+</html>
